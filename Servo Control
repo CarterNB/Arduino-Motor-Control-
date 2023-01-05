@@ -1,0 +1,38 @@
+#include <Servo.h>
+#define BUT1 3
+#define BUT2 2
+Servo myservo;  // create servo object to control a servo
+
+int pos = 90;    // variable to store the servo position
+
+void setup() {
+  myservo.attach(7);  // attaches the servo on pin 9 to the servo object
+  pinMode(2,INPUT_PULLUP);
+  pinMode(3,INPUT_PULLUP);
+  
+}
+
+void loop() {
+  int read1=digitalRead(BUT1);
+  int read2=digitalRead(BUT2);
+  myservo.write(pos);
+
+  
+  
+  if (read1==LOW){ 
+    pos=pos+45; //move servo 45 degrees CW
+    myservo.write(pos);
+    delay(500);
+  }
+  if (read2==LOW){
+    pos=pos-45; //move servo 45 degrees CCW
+    myservo.write(pos);
+    delay(500);
+  }
+  if (pos>=180){ //can't go past 180 degrees
+    pos=180;
+  }
+  if (pos<=0){ //can't go past0 degrees
+    pos=0
+;  }
+}
