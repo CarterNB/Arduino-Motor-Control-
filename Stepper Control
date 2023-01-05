@@ -1,0 +1,27 @@
+  #include <Stepper.h>
+  #define BUT1 3
+  #define BUT2 2
+  #define STEPS 2048 // the number of steps in one revolution of your motor (28BYJ-48)
+  
+  Stepper stepper(STEPS, 8, 10, 9, 11);
+  
+ void setup() {
+  pinMode(2,INPUT_PULLUP);
+  pinMode(3,INPUT_PULLUP);
+ }
+ 
+ void loop() {
+  int read1=digitalRead(BUT1);
+  int read2=digitalRead(BUT2);
+  
+  if (read2==LOW){
+    stepper.setSpeed(8);    // speed in rpm
+    stepper.step(-STEPS/8); //move 45 degrees CCW
+    delay(250);
+  }
+  if (read1==LOW){
+    stepper.setSpeed(8);    
+    stepper.step(STEPS/8);  //move 45 degrees CW
+    delay(250);
+  }
+ }
