@@ -1,0 +1,50 @@
+#include <Servo.h> 
+#include <Stepper.h>
+#define STEPS 2048 // the number of steps in one revolution of your motor (28BYJ-48)
+
+Servo myservo;  // create servo object to control a servo
+
+Stepper stepper(STEPS, 8, 10, 9, 11);
+
+const int X_pin = A0; // analog pin connected to X output
+const int Y_pin = A1; // analog pin connected to Y output
+int xVal, yVal, xMap, yMap;
+
+void setup() {
+  myservo.attach(7);  // attaches the servo on pin 7 to the servo object
+}  
+void loop() {
+
+  xVal=analogRead(X_pin);         //x pos of joystick
+  xMap = map(xVal,0,1023,0,180);  //map x pos from 0 to 180 degrees
+  myservo.write(xMap);
+  yVal=analogRead(Y_pin);         //y pos of joystick
+ if((yVal>490) && (yVal<530))     //joystick deadzone
+ {
+  digitalWrite(8, LOW);
+  digitalWrite(9, LOW);
+  digitalWrite(10, LOW);
+  digitalWrite(11, LOW);
+  }
+  else {
+  while(yVal>=530)
+  { 
+  yMap = map(yVal,530,1023,1,8);  //map up on joystick to CW movement
+  stepper.setSpeed(yMap);
+  stepper.step(1);
+  yVal=analogRead(Y_pin);
+  xVal=analogRead(X_pin);
+  xMap = map(xVal,0,1023,0,180);
+  myservo.write(xMap);
+  }
+  while(yVal<=490){ 
+  yMap = map(yVal,490,0,1,8);     //map down on joystick to CCW movement
+  stepper.setSpeed(yMap);
+  stepper.step(-1);
+  yVal=analogRead(Y_pin);
+  xVal=analogRead(X_pin);
+  xMap = map(xVal,0,1023,0,180);
+  myservo.write(xMap);
+  }
+ }
+}
